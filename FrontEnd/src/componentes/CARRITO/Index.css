@@ -1,0 +1,281 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+.carrito {
+    background-color: rgb(214, 229, 236);
+    min-height: 100vh;                                  /* Para evitar que se acorte si no hay productos*/
+    background-image: url(../../../public/IMG/FondoCarrito.jpg);
+    background-repeat: repeat;                             
+    background-position: center center;                      
+    background-size: cover;
+
+    font-family: "Rubik", sans-serif;
+    font-size: 18px;
+    color: rgb(73, 31, 84);
+}
+
+.carrito > div:nth-child(2){
+    width: 100%;
+    height: 40px;
+    box-shadow: 0 4px 10px 0 rgb(219, 159, 131);
+
+    color: white;
+    font-size: large;
+    font-weight: bolder;
+    text-shadow: -5px -5px 5px rgb(14, 30, 92);
+
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.carrito h1{
+    width: 100%;
+    background-color: transparent;
+    
+
+    text-align: center;
+    color: rgb(245, 245, 247);
+    font-family: "Roboto", sans-serif;
+    font-size: large;
+    font-weight: bolder;
+    text-shadow: -2px -2px 5px rgb(129, 136, 163);
+}
+
+.carrito .msg-error{
+    width: 60%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    text-align: center;
+    margin: 0 auto;
+
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 1.6px solid rgba(178, 13, 13, 0.741);
+    
+    box-shadow: inset 0px 0px 50px rgba(205, 45, 98, 0.674), inset 0px 0px 50px rgba(171, 8, 62, 0.534);
+    color: rgb(213, 95, 95);
+    background-color: rgba(226, 201, 207, 0);
+}
+
+/* ----------------- Listado carrito de productos ----------------- */
+
+.carrito .section-List{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carrito .card-carrito {
+    width: 90%;
+    padding: 10px;
+    padding-right: 20px;
+    margin: 10px 0;
+    border: 1.6px solid rgba(101, 101, 101, 0.162);
+    border-radius: 20px;
+
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+    backdrop-filter: saturate(180%) blur(10px);
+    background-color: rgba(78, 78, 78, 0.183);
+    box-shadow: 0px 1px 10px 0px rgba(31, 38, 135, 0.1);
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.card-carrito-foto {
+    width: 100%; 
+    min-width: 100px;
+    min-height: 100px;
+
+    max-width: 250px;
+    max-height: 250px;
+
+    height: auto; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; 
+}
+.card-carrito-foto img {
+    max-width: 100%; 
+    max-height: 100%; 
+    object-fit: cover; 
+}
+
+.carrito div .card-carrito-datos{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    min-width: 45%;
+    max-width: fit-content;
+    font-size: larger;
+}
+
+.carrito .card-carrito-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: auto;
+    padding: auto;
+}
+
+.carrito .card-carrito-botones div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+
+    width: 100%;
+    max-width: 200px;
+}
+
+.carrito .card-carrito-botones div div{
+    border: 1.5px solid rgb(248, 222, 199);
+    border-radius: 6px;
+    padding: 1px;
+    margin: 0;
+    margin-top: 6px;
+    margin-bottom: 6px;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.carrito .card-carrito-botones div div button{
+    border: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.carrito .card-carrito-botones input{
+    margin: 0;
+    border: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+    width: 50%;
+
+    background: transparent;
+    text-align: center;
+}
+.carrito .card-carrito-botones input::-webkit-outer-spin-button,
+.carrito .card-carrito-botones input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.carrito .card-carrito-botones > div > button:last-child{
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 6px;
+    padding: 1px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    width: 100%;
+
+    font-size: medium;
+    color: rgb(254, 214, 190);
+    background-color: rgb(205, 45, 98);
+}
+
+/* ----------------- Botones Pedir y Borrar ----------------- */
+
+.carrito .carrito-botones{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 30px;
+}
+
+.carrito .carrito-borrar{
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 6px;
+    padding: 1px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    width: 10%;
+
+    font-size: medium;
+    color: rgb(254, 214, 190);
+    background-color: rgb(154, 33, 73);
+}
+.carrito .carrito-pedir{
+    border: 1px solid rgb(200, 200, 200);
+    border-radius: 6px;
+    padding: 1px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    width: 10%;
+
+    font-size: medium;
+    color: rgb(254, 214, 190);
+    background-color: rgb(48, 136, 130);
+}
+
+@media (max-width: 620px) {
+    .carrito .card-carrito {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .card-carrito-foto {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        margin: auto;
+        height: auto; 
+    }
+
+    .carrito .card-carrito-botones{
+        width: 90%;
+        max-width: 100%;
+        margin: auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        
+    }
+
+    .carrito .card-carrito-botones div{
+        width: 100%;
+        max-width: 100%;
+        margin-top: 10px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carrito .card-carrito-datos{
+        margin: auto;
+        padding: auto;
+
+        display: flex;
+        flex-direction: column;
+    }
+    .carrito .card-carrito-datos p{
+        margin: auto;
+        padding: auto;
+    }
+    
+    .carrito .carrito-borrar{
+        width: 90%;
+    }
+
+    .carrito .carrito-pedir{
+        width: 90%;
+    }
+}

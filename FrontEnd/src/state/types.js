@@ -1,0 +1,2 @@
+export const LOGIN = 'LOGIN'
+export const USUARIO_LOGUEADO = 'USUARIO_LOGUEADO'

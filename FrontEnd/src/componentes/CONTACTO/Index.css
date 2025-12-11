@@ -1,0 +1,123 @@
+.contacto{
+    background-color: rgb(214, 229, 236);
+    height: 1000px;
+
+    background-image: url(../../../public/IMG/FondoInicio.jpg);
+    background-repeat: repeat-y;                             
+    background-position: center center;                      
+    background-size: 100%;
+    
+}
+.contacto h1{
+    width: 100%;
+    background-color: transparent;
+
+    text-align: center;
+    font-family: "Roboto", sans-serif;
+    color: white;
+    font-size: larger;
+    font-weight: bolder;
+    text-shadow: -2px -2px 5px rgb(14, 30, 92);
+
+}
+.contacto > div:first-of-type{
+    width: 100%;
+    height: 40px;
+    background-color: transparent;
+    box-shadow: 2px 2px 5px rgb(14, 30, 92);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ----------------------- Formulario ---------------------- */
+
+.contacto .contacto-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 25px;
+    color: rgb(219, 49, 105);
+}
+
+.contacto .input-group{
+    width: 60%;
+    border: 2px solid white;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 10px;
+    background-color: rgb(240, 240, 240);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.contacto label{
+    margin: 0 auto;
+    padding-bottom: 5px;
+}
+
+.contacto .invalid-feedback{
+    text-align: center;
+}
+
+/* ----------------------- Entradas ---------------------- */
+
+.contacto .input-group:hover{
+    box-shadow:  2px 2px 7px 5px rgb(227, 202, 146);
+}
+.contacto input:hover, textarea:hover{
+    border: 2px solid rgb(166, 225, 233);
+}
+.contacto input:focus, textarea:focus {
+    outline: none;
+    border: 2px solid rgb(222, 214, 169);
+}
+.contacto .entrada{
+    width: 80%;
+    height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    margin-bottom: 5px;
+    border: 2px;
+    box-shadow:  2px 2px 7px 5px rgba(154, 194, 200, 0.644);
+}
+.contacto textarea{
+    width: 80%;
+    border-radius: 30px !important;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 2px;
+    box-shadow:  2px 2px 7px 5px rgba(154, 194, 200, 0.644);
+    text-align: start;
+}
+.contacto form div button, main input[type="summit"]{
+    margin-top: 10px;
+    box-shadow:  2px 2px 7px 5px rgb(222, 214, 169);
+}
+
+/* ----------------------- Botones ----------------------- */
+
+.contacto button{
+    background-color: white;
+    border: 1px white;
+    border-radius: 20px;
+
+    padding: 10px;
+    margin: 0 auto;                                        /* Centra horizontalmente el boton */
+    margin-top: auto;                                    
+
+    font-size: medium;
+    font-weight: bold;
+    color: rgb(60, 66, 104);
+}
+.contacto button:hover {
+    cursor: pointer;
+    color: white;
+    background-image: linear-gradient( 58.2deg,  rgba(40,91,212,0.73) -3%, rgba(171,53,163,0.45) 49.3%, rgba(255,204,112,0.37) 97.7% );
+}

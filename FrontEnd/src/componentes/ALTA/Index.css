@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+.alta{
+    font-family: "Rubik", sans-serif;
+    background-color: rgb(201, 173, 195);
+    background-image: url(../../../public/IMG/FondoAlta.jpg);
+    background-repeat: repeat-y;                             
+    background-position: center center;                      
+    background-size: cover;
+    padding-bottom: 30px;
+}
+
+/* ------------------ Cabecera ------------------ */
+
+.alta > div:nth-child(2), .alta h2{
+    width: 100%;
+    height: 40px;
+    box-shadow: 2px 2px 10px 8px rgb(155, 162, 190);
+    
+    color: white;
+    text-shadow: -2px -2px 5px rgb(1, 5, 20);
+
+    margin-bottom: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.alta h1{
+    width: 100%;
+    background-color: transparent;
+
+    text-align: center;
+    color: rgb(245, 245, 247);
+    font-family: "Roboto", sans-serif;
+    font-size: larger;
+    font-weight: bolder;
+    text-shadow: -2px -2px 5px rgb(42, 47, 67);
+}
+.alta > div:nth-child(2){
+    box-shadow: 0 4px 10px 0 rgb(133, 92, 124);
+}
+
+/* ----------------- Formulario ----------------- */
+
+.alta-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+
+    color: rgb(97, 122, 139);
+    font-family: "Playfair Display", serif;
+}
+
+.alta .input-group{
+    width: 60%;
+    border: 2px solid white;
+    border-radius: 30px;
+    padding: 10px;
+    margin: 10px;
+    background-color: rgb(240, 240, 240);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.alta label{
+    margin: 0 auto;
+    padding-bottom: 5px;
+}
+
+.alta .invalid-feedback{
+    text-align: center;
+}
+
+/* ----------------------- Entradas ---------------------- */
+
+.alta .input-group:hover{
+    box-shadow:  2px 2px 7px 5px rgba(133, 117, 138, 0.459);
+}
+.alta input:hover, .alta textarea:hover{
+    border: 2px solid rgb(123, 142, 222);
+}
+.alta input:focus, .alta textarea:focus {
+    outline: none;
+    border: 2px solid rgb(67, 72, 187);
+}
+.alta .entrada{
+    width: 80%;
+    height: 30px;
+    border-radius: 30px !important;
+    text-align: center;
+    margin-bottom: 5px;
+    border: 2px;
+    box-shadow:  2px 2px 7px 5px rgba(133, 117, 138, 0.243);
+}
+.alta textarea{
+    width: 80%;
+    border-radius: 30px!important;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 2px;
+    box-shadow:  2px 2px 7px 5px rgba(133, 117, 138, 0.243);
+    text-align: start;
+}
+.alta input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+.alta #envio-container{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+}
+.alta form div button, .alta input[type="summit"]{
+    margin-top: 10px;
+    box-shadow:  2px 2px 7px 5px rgba(133, 117, 138, 0.2);
+}
+
+/* ----------------------- Botones ----------------------- */
+
+.alta button{
+    background-color: rgb(240, 240, 240);
+    border: 1px white;
+    border-radius: 10px;
+
+    width: 30%;
+    height: 40px;
+    padding: 10px;
+    margin: 0 auto;                                        /* Centra horizontalmente el boton */
+    margin-top: auto;                                    
+
+    font-size: medium;
+    font-weight: bold;
+    color: rgb(60, 66, 104);
+
+    margin: 15px auto;
+    display: block;
+}
+.alta button:hover {
+    cursor: pointer;
+    color: white;
+    background-image: linear-gradient( 58.2deg,  rgba(40,91,212,0.73) -3%, rgba(171,53,163,0.45) 49.3%, rgba(255,204,112,0.37) 97.7% );
+}
+
+/* ----------------------- Tabla ----------------------- */
+
+.alta .centrar {
+    text-align: center;
+}
+
+td img {
+    max-width: 100%;
+    max-height: 100%;
+    margin-right: .5rem;
+    vertical-align: middle;
+}
+
+table, th, td {
+    border-collapse: collapse;                             /* Elimina las lineas de separacion*/
+    padding: 5px;
+    text-align: left;
+}
+thead th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: rgb(213, 209, 222);
+    cursor: pointer;
+    text-transform: capitalize;
+    padding: 1rem;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #0000000b;                           /* La sombra de cada renglon */
+}
+
+tbody tr:hover {
+    background-color: #fff6 ;                              /* La sombra que sigue el cursor */
+}
+thead th:hover {
+    color: rgb(108, 0, 189);
+}
+
+/* ------------------ Tabla Responsive ------------------- */
+
+.tabla-container {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+}
+
+.tabla-responsive {
+    overflow-x: auto;
+    border: 1px solid white;
+    border-radius: 10px;
+    overflow-x: auto;
+    padding: 10px;
+    max-width: 90%;
+    box-shadow: 0 0 10px rgba(40, 9, 57, 0.925);
+}
+
+.tabla-responsive table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-responsive th, .tabla-responsive td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.tabla-responsive th {
+    background-color: #f2f2f29b;
+}
+
+.tabla-responsive img {
+    min-width: 150px;
+    max-width: 100%;
+    height: auto;
+}
+
+.tabla-responsive::-webkit-scrollbar {
+    width: 8px;
+}
+  
+.tabla-responsive::-webkit-scrollbar-thumb {
+    background: rgb(185, 216, 226); 
+    border-radius: 4px;
+}
+  
+.tabla-responsive::-webkit-scrollbar-track {
+    background: #1c1c1c00; 
+}
+
+/* ----------------------- Tabla Botones ----------------------- */
+
+.alta table button:hover {
+    color: rgb(108, 0, 189);
+}
+
+.alta table button[id*="btnBorrar-"] {
+    margin: 15px auto;
+    display: block;
+
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    font-size: medium;
+
+    border: 2px solid rgb(189, 24, 61);
+    background-color: rgb(213, 209, 222);
+    color: black;
+}
+
+.alta table button[id*="btnBorrar-"]:disabled {
+    opacity: 0.5;
+}
+
+.alta table button[id*="btnEditar-"], 
+.alta table button[id*="btnCancelar-"] {
+    margin: 15px auto;
+    display: block;
+    width: 100px; 
+    height: 45px;
+    border-radius: 5px;
+    font-size: medium;
+    border: 2px solid rgb(255, 168, 97);
+    background-color: rgb(213, 209, 222);
+    color: black;
+}
+
+.alta table button[id*="btnCancelar-"] {
+    background-color: rgb(189, 24, 61);
+    color: white;
+}
+
+.alta .btnAgregar:disabled { opacity: 0.5; }
+
+.alta .btnActualizar {
+    margin: 15px auto;
+    display: block;
+
+    width: 40%;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 20px;
+
+    background-color: rgb(100, 195, 155);
+    color: white;
+}
+.alta .btnActualizar:disabled { opacity: 0.5; }
+
+.msg-error{
+    width: 60%;
+    height: fit-content;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    text-align: center;
+    margin: 0 auto;
+
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 1.6px solid rgba(178, 13, 13, 0.741);
+    
+    box-shadow: inset 0px 0px 50px rgba(205, 45, 98, 0.674), inset 0px 0px 50px rgba(171, 8, 62, 0.534);
+    color: rgb(213, 95, 95);
+    background-color: rgba(226, 201, 207, 0);
+}

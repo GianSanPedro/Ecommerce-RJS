@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+.chat-container {
+    width: 50%;
+    height: 80%;
+    background: rgba(0, 0, 0, 0.386);
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    font-family: "Radio Canada Big", sans-serif;
+}
+  
+.chat-header {
+  background: rgba(0, 0, 0, 0.2);
+  max-height: 70px;
+  color: #fff;
+  padding: 10px;
+
+  text-align: center;
+  font-family: "Roboto Serif", serif;
+  font-size: medium;
+  font-weight: 400;
+  font-style: normal;
+
+  border-bottom: 1px solid #444;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.chat-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background: #333; 
+  border-radius: 4px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background: #1c1c1c; 
+}
+  
+.chat-messages {
+  padding: 10px;
+}
+
+.message-header{
+  font-family: 'Playfair Display',"Roboto Serif", serif;
+  font-weight: bold;
+  font-size: medium;
+}
+
+.message-content{
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+
+.message-footer{
+  display: block;
+  margin-left: auto;
+
+  text-align: right;
+  font-weight: lighter;
+  font-size: smaller;
+}
+
+.message, .message-personal{
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  max-width: 70%; 
+  min-width: 250px;
+  width: fit-content;
+  word-wrap: break-word;
+  position: relative;
+}
+  
+.message {
+  background: linear-gradient(120deg, rgb(1, 42, 58), rgb(80, 7, 71));
+  color: rgba(255, 255, 255, 0.5);
+}
+  
+.message-personal {
+  background: linear-gradient(120deg, rgb(36, 138, 82), rgb(37, 114, 135));
+  color: rgb(255, 255, 255);
+  margin-left: auto;
+}
+
+.form-message {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 100%;
+}
+  
+.chat-footer {
+  max-height: 80px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid #444;
+}
+  
+.chat-footer .chat-textArea {
+  flex: 10; 
+  flex-direction: row;
+  align-items: center;
+
+  height: 100%;
+  border: none;
+  padding: 5px;
+  margin-right: 5px;
+  margin-left: 5px;
+  background: transparent;
+  color: #fff;
+  resize: none;
+}
+  
+.send-button {
+  flex: 1;
+  background: rgb(36, 138, 82);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+
+  margin-right: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+  
+.send-button:hover {
+  background: rgb(22, 70, 82);
+}
+  
+.message::after {
+  content: "";
+  position: absolute;
+  bottom: -17px; 
+  left: -9px; 
+  border-left: 9px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 30px solid rgb(8, 38, 59); 
+  border-end-start-radius: 40px;
+  transform: rotate(35deg); 
+}
+
+.message-personal::after {
+  content: "";
+  position: absolute;
+  bottom: -17px; 
+  right: -9px; 
+  border-left: 9px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 30px solid rgb(37, 116, 132); 
+  border-end-start-radius: 40px;
+  transform: rotate(-35deg); 
+}

@@ -1,0 +1,44 @@
+.chat {
+    font-family: "Roboto", sans-serif;
+    background-color: rgb(67, 42, 61);
+    background-image: url(../../../public/IMG/FondoChat.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    padding-bottom: 30px;
+    position: relative;
+    z-index: 1; 
+}
+
+.chat::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../../public/IMG/FondoChat.jpg); /* Repite el fondo */
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    filter: blur(80px);
+    z-index: -1; 
+}
+
+
+/* ------------------ Cabecera ------------------ */
+
+
+.chat #titulo-chat{
+    width: 100%;
+    background-color: transparent;
+    height: 38px;
+    text-align: center;
+    color: rgb(245, 245, 247);
+    font-family: "Roboto", sans-serif;
+    font-size: larger;
+    font-weight: bolder;
+    text-shadow: -2px -2px 5px rgb(23, 26, 37);
+    box-shadow: 0 4px 10px 0 rgb(80, 47, 72);
+}
+

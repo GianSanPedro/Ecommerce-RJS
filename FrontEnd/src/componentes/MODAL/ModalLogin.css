@@ -1,0 +1,72 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+#ModalLogin-body {
+    padding: 20px;
+}
+  
+#ModalLogin-titulo {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgb(67, 28, 102);
+}
+  
+#ModalLogin-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+  
+#ModalLogin-header .close {
+    color: #333;
+    font-size: 1.5rem;
+    opacity: 1;
+}
+  
+#ModalLogin-header .close:hover {
+    color: #000;
+}
+  
+/* Estilo para el cuerpo del modal */
+#ModalLogin-body {
+    background-color: rgba(255, 255, 255, 0.3); 
+    background: url('../../../public/IMG/FondoLogin.jpg') no-repeat center center; 
+    background-size: cover;
+    padding: 20px;
+    box-shadow: 0px 1px 10px 0px rgba(31, 38, 135, 0.1);
+    position: relative;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    overflow: hidden;
+}
+
+#ModalLogin-body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.123); /* Fondo blanco translúcido para mayor difuminación */
+    z-index: 1;
+    border-radius: inherit; /* Hereda las esquinas redondeadas del padre */
+    backdrop-filter: blur(10px); /* Aumenta el desenfoque para que la imagen apenas se vea */
+    -webkit-backdrop-filter: blur(20px); /* Soporte para Safari */
+}
+
+#ModalLogin-body * {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+
+.ModalLogin-content {
+    background-color: transparent;
+    border-radius: 0.5rem;
+}
+
+
+
+
+
+  
