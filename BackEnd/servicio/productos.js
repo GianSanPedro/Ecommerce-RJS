@@ -1,7 +1,7 @@
 import ModelFactory from '../model/DAO/productos/productosFactory.js'
 import config from '../config.js'
 
-import validar from './validaciones/producto.js'
+import validar, { validarParcial } from './validaciones/producto.js'
 
 
 class Servicio {
@@ -23,6 +23,8 @@ class Servicio {
     }
 
     actualizarProducto = async (id, producto) => {
+        const error = validarParcial(producto)
+        if(error) throw new Error(`Error de formato en campos del producto: ${error.details[0].message}`)
         const productoActualizado = await this.model.actualizarProducto(id,producto)
         return productoActualizado
     }

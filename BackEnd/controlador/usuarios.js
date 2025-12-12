@@ -10,8 +10,12 @@ class Controlador {
     loginUsuario = async (req, res) => {
         try {
             const credenciales = req.body
+            console.log('Login intento:', credenciales)
             const usuarioLogueado = await this.servicio.loginUsuario(credenciales)
-            if(usuarioLogueado.status === 'loginError') return res.status(401).json(usuarioLogueado)
+            if(usuarioLogueado.status === 'loginError') {
+                console.warn('Login error:', usuarioLogueado)
+                return res.status(401).json(usuarioLogueado)
+            }
             res.json(usuarioLogueado)
         }
         catch(error) {

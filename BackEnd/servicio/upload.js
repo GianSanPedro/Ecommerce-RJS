@@ -58,7 +58,9 @@ class Servicio {
             try {
                 if(src) await fs.promises.unlink(src)
             } catch {}
-            throw new Error('No se pudo subir el archivo por FTP')
+            // Fallback: servir desde carpeta local /media
+            const base = (config.CDN_BASE_URL || `http://localhost:${config.PORT}/media`).replace(/\/$/,'')
+            return `${base}/${file.filename}`
         }
     }
 }

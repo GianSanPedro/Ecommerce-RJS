@@ -14,13 +14,16 @@ class Servicio {
     if(error) return { status: "loginError", mensaje: error.details[0].message }
 
     const email = (credenciales.email || "").toLowerCase().trim();
-    const password = credenciales.password || "";
+    const password = (credenciales.password || "").trim();
 
     if (!email || !password) return { status: "loginError", mensaje: "Credenciales incompletas" };
 
     const usuarios = await this.model.obtenerUsuarios();
     const usuarioDB = usuarios.find((u) => (u.email || "").toLowerCase() === email);
-    if (!usuarioDB) return { status: "loginError" };
+    if (!usuarioDB) {
+      console.warn('Login fallido: usuario no encontrado', email)
+      return { status: "loginError", mensaje: "Usuario no encontrado" };
+    }
 
     const storedPassword = usuarioDB.password || "";
     let passwordOk = await bcrypt.compare(password, storedPassword);
@@ -34,7 +37,10 @@ class Servicio {
       passwordOk = true;
     }
 
-    if (!passwordOk) return { status: "loginError" };
+    if (!passwordOk) {
+      console.warn('Login fallido: password incorrecta', email)
+      return { status: "loginError", mensaje: "Password incorrecta" };
+    }
 
     const { nombre, email: emailDB, admin } = usuarioDB;
     const usuario = { nombre, email: emailDB, admin: !!admin };
@@ -64,8 +70,8 @@ class Servicio {
     if(error) return { status: "registerError", mensaje: error.details[0].message }
 
     const email = (credenciales.email || "").toLowerCase().trim();
-    const password = credenciales.password || "";
-    const nombre = credenciales.nombre || "";
+    const password = (credenciales.password || "").trim();
+    const nombre = (credenciales.nombre || "").trim();
     const admin = !!credenciales.admin;
 
     if (!email || !password || !nombre)

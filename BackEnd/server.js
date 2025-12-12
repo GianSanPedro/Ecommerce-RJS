@@ -42,8 +42,8 @@ io.on('connection', new RouterMensajes(io).config())
 
 // -------------- Rutas / endpoints API RESTFUL ------------------
 
-// rutas protegidas
-app.use('/api/productos', guarda, soloAdmin, new RouterProductos().config())
+// rutas protegidas / públicas según recurso
+app.use('/api/productos', new RouterProductos(guarda, soloAdmin).config())
 app.use('/api/pedidos', new RouterPedidos(guarda).config())
 app.use('/api/upload', guarda, soloAdmin, new RouterUpload().config())
 

@@ -15,6 +15,7 @@ export function Ingreso(props) {
     } = props.producto;
 
     const { onChange, onSubmit, valido, editarID, escribirCampoUrlFoto } = props;
+    const preventWheel = e => e.preventDefault()
 
     return (
         <form className="alta-form needs-validation" noValidate onSubmit={onSubmit}>
@@ -45,6 +46,7 @@ export function Ingreso(props) {
                     step="0.01"
                     value={precio}
                     onChange={onChange}
+                    onWheel={preventWheel}
                     required
                 />
                 <div className="valid-feedback"></div>
@@ -61,6 +63,7 @@ export function Ingreso(props) {
                     name="stock"
                     value={stock}
                     onChange={onChange}
+                    onWheel={preventWheel}
                     required
                 />
                 <div className="valid-feedback"></div>

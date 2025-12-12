@@ -9,6 +9,8 @@ Fullstack e-commerce app with a Node/Express backend and a React frontend. Inclu
 - **Frontend**: React 18 (CRA), HashRouter, Redux Toolkit, Axios (sends `access-token`), `@mercadopago/sdk-react`, Socket.IO client.
 - **Security**: JWT middleware `guarda`; `soloAdmin` to protect products, contacts, and uploads; Joi validations (products, contacts, orders, credentials).
 - **Payments**: Mercado Pago preferences; the pending cart/order is persisted when creating the preference and consolidated on feedback.
+- **Uploads**: If FTP fails or is not configured, files fall back to local `media/` and return a usable URL; upload endpoint creates the `media` folder if missing.
+- **Cart persistence**: Stored in `localStorage` (survives logout) until checkout, manual clear, or explicit removal.
 
 ## 🧱 Architecture
 - Split into `BackEnd` (API + websockets + static) and `FrontEnd` (SPA).
@@ -17,8 +19,9 @@ Fullstack e-commerce app with a Node/Express backend and a React frontend. Inclu
   - Router/Controller: translate HTTP/Socket to services.
   - Service: business logic (validations, payments, saving orders and pending cart, upload, JWT).
   - DAO/Model: factories for MEM/FILE/MongoDB.
-  - Frontend: public/protected routes, cart, login/register, product admin, chat, contacts.
+- Frontend: public/protected routes, cart, login/register, product admin, chat, contacts.
 - Security: `guarda` validates token; `soloAdmin` requires `admin=true`; consistent 400/401/403 responses.
+- Cart persistence: kept in `localStorage` (survives logout) until checkout, manual clear, or explicit removal.
 
 ## 🗂️ Folder structure
 ```
@@ -44,7 +47,7 @@ Ecommerce/
 ## 🔌 Main endpoints
 | Method | Path | Description | Protection |
 | --- | --- | --- | --- |
-| GET | `/api/productos/:id?` | List products or one. | JWT + admin |
+| GET | `/api/productos/:id?` | List products or one. | Public |
 | POST | `/api/productos/` | Create product (Joi). | JWT + admin |
 | PUT | `/api/productos/:id` | Update product. | JWT + admin |
 | DELETE | `/api/productos/:id` | Delete product. | JWT + admin |
@@ -70,7 +73,7 @@ Ecommerce/
 
 ## 🖥️ Frontend
 - Views: Home (catalog + cart), Alta (admin CRUD with drag&drop upload), Cart (edit, Wallet MP, persists pending order), Contact (public form, admin view to delete), Chat (author/admin messages), About.
-- State/Auth: Redux Toolkit (`login`, `usuarioLogueado`), token in localStorage, cart in localStorage (`useStateLocalStorage` hook).
+- State/Auth: Redux Toolkit (`login`, `usuarioLogueado`), token in localStorage, cart in localStorage (`useStateLocalStorage` hook, survives logout until cleared or checkout).
 - Navigation: HashRouter to serve behind Express static.
 - API consumption: Axios with `access-token` header; base URL depends on `NODE_ENV` and `REACT_APP_PORT_SRV_DEV`.
 - Payments: `@mercadopago/sdk-react` (Wallet); preference generated in backend.

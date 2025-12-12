@@ -1,6 +1,8 @@
 import express from 'express'
 import Controlador from '../controlador/upload.js'
 import multer from 'multer'
+import fs from 'fs'
+import path from 'path'
 
 //IMPORTANTE npm install multer    https://www.npmjs.com/package/multer
 
@@ -12,7 +14,11 @@ const storage = multer.diskStorage({
         cb(null, `${Date.now()}-${file.originalname}`)
     },
     destination: function(req, file, cb) {
-        cb(null, './media')
+        const dest = path.resolve('./media')
+        if(!fs.existsSync(dest)) {
+            fs.mkdirSync(dest, { recursive: true })
+        }
+        cb(null, dest)
     }
 })
 

@@ -15,5 +15,7 @@ export const registerSchema = Joi.object({
     admin: Joi.boolean().optional()
 })
 
-export const validarLogin = credenciales => loginSchema.validate(credenciales, { abortEarly: true })
-export const validarRegister = credenciales => registerSchema.validate(credenciales, { abortEarly: true })
+const options = { abortEarly: true, allowUnknown: true }
+
+export const validarLogin = credenciales => loginSchema.validate(credenciales, options)
+export const validarRegister = credenciales => registerSchema.validate(credenciales, options)

@@ -9,6 +9,8 @@ Aplicación fullstack de comercio electrónico con backend en Node/Express y fro
 - **Frontend**: React 18 (CRA), HashRouter, Redux Toolkit, Axios (envía `access-token`), `@mercadopago/sdk-react`, Socket.IO client.
 - **Seguridad**: Middleware JWT `guarda`; `soloAdmin` para proteger productos, contactos y upload; validaciones Joi (productos, contactos, pedidos, credenciales).
 - **Pagos**: Preferencias de Mercado Pago; el carrito/pedido pendiente se persiste al crear la preferencia y se consolida en el feedback.
+- **Uploads**: Si falla o no se configura FTP, las imágenes se sirven desde `media/` local y se devuelve una URL utilizable; el endpoint crea la carpeta `media` si falta.
+- **Carrito persistente**: Se guarda en `localStorage` (persiste tras logout) hasta checkout, borrado manual o eliminación explícita.
 
 ## 🧱 Arquitectura general
 - Separación en `BackEnd` (API + websockets + estáticos) y `FrontEnd` (SPA).
@@ -44,7 +46,7 @@ Ecommerce/
 ## 🔌 Endpoints principales
 | Método | Ruta | Descripción | Protección |
 | --- | --- | --- | --- |
-| GET | `/api/productos/:id?` | Lista productos o uno. | JWT + admin |
+| GET | `/api/productos/:id?` | Lista productos o uno. | Público |
 | POST | `/api/productos/` | Crea producto (Joi). | JWT + admin |
 | PUT | `/api/productos/:id` | Actualiza producto. | JWT + admin |
 | DELETE | `/api/productos/:id` | Borra producto. | JWT + admin |
@@ -70,7 +72,7 @@ Ecommerce/
 
 ## 🖥️ Frontend
 - Vistas: Inicio (catálogo + carrito), Alta (CRUD admin con upload drag&drop), Carrito (edición, Wallet MP, persiste pedido pendiente), Contacto (form público, vista admin para eliminar), Chat (mensajes de autor/admin), Nosotros.
-- Estado/Auth: Redux Toolkit (`login`, `usuarioLogueado`), token en localStorage, carrito en localStorage (hook `useStateLocalStorage`).
+- Estado/Auth: Redux Toolkit (`login`, `usuarioLogueado`), token en localStorage, carrito en localStorage (hook `useStateLocalStorage`; persiste tras logout hasta limpiarlo o finalizar compra).
 - Navegación: HashRouter para servir tras Express estático.
 - Consumo API: Axios con `access-token` en headers; base URL depende de `NODE_ENV` y `REACT_APP_PORT_SRV_DEV`.
 - Pagos: `@mercadopago/sdk-react` (Wallet); preference se genera en backend.

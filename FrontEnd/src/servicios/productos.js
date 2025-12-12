@@ -27,6 +27,15 @@ const eliminarPropiedad = (obj, prop) => {
     return objClon
 }
 
+const normalizarProducto = prod => {
+    const norm = { ...prod }
+    if(norm.precio !== undefined) norm.precio = Number(norm.precio)
+    if(norm.stock !== undefined) norm.stock = Number(norm.stock)
+    if(norm.envio !== undefined) norm.envio = norm.envio === true || norm.envio === 'true' || norm.envio === 1
+    if(norm.id === undefined && norm._id) norm.id = norm._id
+    return norm
+}
+
 export const getAll = async _ => {
     try {
         return (await axios.get(url, setHeader())).data.map(p => proxyProducto(p))
@@ -40,7 +49,8 @@ export const getAll = async _ => {
 export const guardar = async prod => {
     console.log('Datos enviados al servidor:', prod);
     try {
-        return proxyProducto((await axios.post(url, prod, setHeader())).data)
+        const prodNorm = normalizarProducto(prod)
+        return proxyProducto((await axios.post(url, prodNorm, setHeader())).data)
     }
     catch(error) {
         console.error('Error en guardar producto:', error.message )
@@ -51,7 +61,8 @@ export const guardar = async prod => {
     
 export const actualizar = async (id, prod) => {
     try {
-        return proxyProducto((await axios.put(url+id, eliminarPropiedad(prod, '_id'), setHeader())).data)
+        const prodNorm = normalizarProducto(eliminarPropiedad(prod, '_id'))
+        return proxyProducto((await axios.put(url+id, prodNorm, setHeader())).data)
     }
     catch(error) {
         console.error('Error en actualizar producto:', error.message )
