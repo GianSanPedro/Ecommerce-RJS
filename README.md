@@ -2,28 +2,23 @@
 
 [Versión en español](README_ES.md)
 
-Fullstack e-commerce app with a Node/Express backend and a React frontend. Includes a CRUD catalog, cart with Mercado Pago payments, real-time chat, and contact management. Modular design to persist data in memory, JSON files, or MongoDB.
+Fullstack e-commerce app with a Node/Express backend and a React frontend. Includes a CRUD catalog, cart with Mercado Pago payments, real-time chat, contact management, and flexible persistence (memory, JSON files, or MongoDB). Uploads support FTP or local `media` fallback, and the cart lives in `localStorage` until checkout or manual clear.
 
-## 🚀 Quick summary
-- **Backend**: Express, JWT (`access-token` header), Socket.IO, Joi, optional Mongoose, uploads with Multer (validates images up to 5MB) to FTP or local `media`, Mercado Pago integration.
+## Quick summary
+- **Backend**: Express, JWT (`access-token` header), Socket.IO, Joi, optional Mongoose, uploads with Multer (images up to 5MB) to FTP or local `media`, Mercado Pago integration.
 - **Frontend**: React 18 (CRA), HashRouter, Redux Toolkit, Axios (sends `access-token`), `@mercadopago/sdk-react`, Socket.IO client.
-- **Security**: JWT middleware `guarda`; `soloAdmin` to protect products, contacts, and uploads; Joi validations (products, contacts, orders, credentials).
-- **Payments**: Mercado Pago preferences; the pending cart/order is persisted when creating the preference and consolidated on feedback.
-- **Uploads**: If FTP fails or is not configured, files fall back to local `media/` and return a usable URL; upload endpoint creates the `media` folder if missing.
+- **Security**: JWT middleware `guarda`; `soloAdmin` protects products, contacts, and uploads; Joi validations (products, contacts, orders, credentials).
+- **Payments**: Mercado Pago preferences; pending cart/order is persisted on preference creation and consolidated on feedback.
+- **Uploads**: If FTP fails or is not configured, files fall back to local `media/` and return a usable URL; upload endpoint creates `media` if missing.
 - **Cart persistence**: Stored in `localStorage` (survives logout) until checkout, manual clear, or explicit removal.
 
-## 🧱 Architecture
+## Architecture
 - Split into `BackEnd` (API + websockets + static) and `FrontEnd` (SPA).
 - Data flow: Client → React/Redux (HashRouter) → REST API (`/api/...` with `guarda` JWT) → Services/DAO (Joi, MercadoPago, Multer/FTP) → Persistence (MEM/FILE/MongoDB) → JSON/WebSocket response → UI.
-- Layers:
-  - Router/Controller: translate HTTP/Socket to services.
-  - Service: business logic (validations, payments, saving orders and pending cart, upload, JWT).
-  - DAO/Model: factories for MEM/FILE/MongoDB.
-- Frontend: public/protected routes, cart, login/register, product admin, chat, contacts.
+- Layers: routers/controllers translate HTTP/Socket to services; services handle business logic (validations, payments, saving orders and pending cart, upload, JWT); DAO/Model factories pick MEM/FILE/MONGODB; frontend manages routes, state, cart, auth, chat, contacts.
 - Security: `guarda` validates token; `soloAdmin` requires `admin=true`; consistent 400/401/403 responses.
-- Cart persistence: kept in `localStorage` (survives logout) until checkout, manual clear, or explicit removal.
 
-## 🗂️ Folder structure
+## Folder structure
 ```
 Ecommerce/
 - BackEnd/
@@ -44,7 +39,7 @@ Ecommerce/
 - README.md / README_ES.md
 ```
 
-## 🔌 Main endpoints
+## Main endpoints
 | Method | Path | Description | Protection |
 | --- | --- | --- | --- |
 | GET | `/api/productos/:id?` | List products or one. | Public |
@@ -65,13 +60,13 @@ Ecommerce/
 | DELETE | `/api/contacto/:id` | Delete contact. | JWT + admin |
 | WebSocket | `/` | Chat: `mensajes`, `nuevo-mensaje`. | Public |
 
-## 🔐 Authentication and roles
+## Authentication and roles
 - Header `access-token` with JWT signed by `LLAVE`.
 - Middleware `guarda` validates token; `soloAdmin` requires `admin=true`.
 - Admin routes: product CRUD, upload, GET/DELETE contacts.
 - Login/register validated with Joi; 400/401/403 responses as appropriate.
 
-## 🖥️ Frontend
+## Frontend
 - Views: Home (catalog + cart), Alta (admin CRUD with drag&drop upload), Cart (edit, Wallet MP, persists pending order), Contact (public form, admin view to delete), Chat (author/admin messages), About.
 - State/Auth: Redux Toolkit (`login`, `usuarioLogueado`), token in localStorage, cart in localStorage (`useStateLocalStorage` hook, survives logout until cleared or checkout).
 - Navigation: HashRouter to serve behind Express static.
@@ -79,12 +74,12 @@ Ecommerce/
 - Payments: `@mercadopago/sdk-react` (Wallet); preference generated in backend.
 - Real time: `socket.io-client` to the same host as the API.
 
-## 👥 Roles and UI behavior
+## Roles and UI behavior
 - **Visitor** (guest token): browse, search products, add to cart, send contact. Cannot pay (Wallet requires login) or chat (chat shows only when logged). Not admin.
 - **Registered customer** (email/password login): all the above plus pay with Mercado Pago (Wallet), use chat, validate token. No admin permissions.
 - **Administrator** (`admin=true` in token): everything a customer can do, plus full product CRUD (Alta view), upload images, list/delete contacts. The cart hides the purchase button for admin by design.
 
-## ⚙️ Environment configuration
+## Environment configuration
 ### Backend (`BackEnd/.env`)
 - `PORT`: server port (default 8080).
 - `MODO_PERSISTENCIA`: `MEM` (demo), `FILE` (local JSON), `MONGODB` (requires `STRCNX` and `BASE`).
@@ -105,9 +100,9 @@ Quick guides:
 - `REACT_APP_PORT_SRV_DEV`: backend port (e.g., 8080).
 - `REACT_APP_MP_PublicKey`: MP public key (use TEST in dev).
 
-## ▶️ Installation and run
+## Installation and run
 ```bash
-git clone <url-del-repo> Ecommerce
+git clone <repo-url> Ecommerce
 cd Ecommerce
 
 # Backend
@@ -124,11 +119,11 @@ npm start
 ```
 Backend at `http://localhost:<PORT>` (8080 default). Frontend at `http://localhost:3000` (HashRouter).
 
-## 📦 Build and deploy
+## Build and deploy
 - Frontend build: `cd FrontEnd && npm run build`
 - Copy build to backend: `npm run build-copy` (copies to `BackEnd/public` on Windows).
 - Production: run backend (`npm start`) serving `/api/*` and static from `BackEnd/public`, or serve the build separately pointing Axios to the backend domain.
 
-## ✅ Tests
-- Backend: no automated tests (script placeholder).
-- Frontend: CRA tooling (`react-scripts test`) available, no specific suites.
+## Tests
+- **Backend API**: Jest + Supertest in `BackEnd/tests/api.test.js`. Expects the API running (default `http://localhost:8080`; override with `TEST_BASE_URL`). Run from `BackEnd` with `npm test` (or `npx jest`).
+- **Frontend components**: CRA tests in `FrontEnd/src/__tests__` (e.g., Navbar, Inicio). Run from `FrontEnd` with `npm test -- --watch=false`. Warnings from store logs may appear but tests pass.
