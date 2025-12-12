@@ -12,8 +12,8 @@ const url = process.env.NODE_ENV === 'production'
 export const proxyProducto = producto => {
     const handler = {
         get: function(target, prop, receiver) {
-            if(prop === 'id') prop = '_id'
-
+            // Normaliza id para soportar respuestas con _id (Mongo) o id (memoria/archivo)
+            if(prop === 'id') return target._id ?? target.id
             return target[prop]
         }
     }

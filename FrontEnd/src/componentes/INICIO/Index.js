@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Index.css'
 import { Card } from './Card'
 import * as servicioProductos from '../../servicios/productos'
 import { useStateLocalStorage } from '../Hooks/useStateLocalStorage'
 
 export function Index(props) {
-    const { filtro } = props
+    const { filtro, esAdmin } = props
 
     const [productos, setProductos] = useState([])
     const [carrito, setCarrito] = useStateLocalStorage('carrito',[])
@@ -35,8 +35,8 @@ export function Index(props) {
     },[carrito])
 
     function agregarCarritoID(id) {
+        if(esAdmin) return  // admin no agrega al carrito
 
-        // recupero el producto que quiero agregar al carrito en base al id
         const producto = productos.find(p => p.id === id)
 
         const carritoClon = [...carrito]
@@ -78,6 +78,7 @@ export function Index(props) {
                                     key={index}
                                     producto={producto}
                                     agregarCarritoID={agregarCarritoID}
+                                    esAdmin={esAdmin}
                                 />
                             )
                         }

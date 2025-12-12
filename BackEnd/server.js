@@ -8,6 +8,7 @@ import RouterProductos from './router/productos.js'
 import RouterPedidos from './router/pedidos.js'
 import RouterUsuarios from './router/usuarios.js'
 import RouterMensajes from './router/mensajes.js'
+import RouterContactos from './router/contactos.js'
 
 import RouterUpload from './router/upload.js'
 
@@ -47,6 +48,7 @@ app.use('/api/upload', guarda, new RouterUpload().config())
 
 // Rutas de libre acceso
 app.use('/api/usuarios', new RouterUsuarios().config())
+app.use('/api/contacto', new RouterContactos(guarda).config())
 
 // Listen del Servidor
 if(config.MODO_PERSISTENCIA == 'MONGODB') {
@@ -56,5 +58,3 @@ if(config.MODO_PERSISTENCIA == 'MONGODB') {
 const PORT = config.PORT
 const server = http.listen(PORT, () => console.log(`Servidor ApiRestful ECommerce escuchando en http://localhost:${PORT}`))
 server.on('error', error => console.log(`Error en servidor: ${error.message}`))
-
-

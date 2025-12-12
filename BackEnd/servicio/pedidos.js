@@ -26,6 +26,7 @@ class Servicio {
             this.urlBack = datos.urlBack
             this.carrito = datos.carrito
             this.usuario = datos.usuario
+            console.log('back_urls enviados a MP:', datos.prefItems?.body?.back_urls)
             const preferences = await preference.create(datos.prefItems)
             return preferences.id
         }

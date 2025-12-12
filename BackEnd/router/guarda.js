@@ -7,15 +7,13 @@ export const guarda = (req, res, next) => {
     if(token) {
         jwt.verify(token, config.LLAVE, (error, decoded) => {
             if(error) {
-                res.json({ error: true, mensaje: 'Token no válida'})
+                return res.status(401).json({ error: true, mensaje: 'Token no valida'})
             }
-            else {
-                req.decoded = decoded
-                next()
-            }
+            req.decoded = decoded
+            next()
         })
     }
     else {
-        res.json({ error: true, mensaje: 'Token no provista'})
+        return res.status(401).json({ error: true, mensaje: 'Token no provista'})
     }
 }

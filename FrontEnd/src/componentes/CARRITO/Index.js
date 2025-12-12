@@ -33,6 +33,12 @@ export function Index() {
             if (compra.status !== compraStatus.status) {
                 setCompraStatus(compra)
                 if (compra.status === 'approved') {
+                    // persiste el pedido en backend antes de limpiar el carrito
+                    try {
+                        await servicioCarrito.guardarPedido(carrito, usuario, compra)
+                    } catch (error) {
+                        console.error('No se pudo guardar el pedido en backend:', error)
+                    }
                     setCarrito([])
                     await delay(2000)
                     navigate('/')
@@ -211,4 +217,3 @@ export function Index() {
     );
     
 }
-

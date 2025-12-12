@@ -1,0 +1,23 @@
+[
+	{
+		"autor": "Cliente1",
+		"texto": "dadasda",
+		"admin": false,
+		"fyh": "11/12/2025, 22:39:04",
+		"id": "1"
+	},
+	{
+		"autor": "Cliente1",
+		"texto": "HOLAAA",
+		"admin": false,
+		"fyh": "11/12/2025, 22:39:16",
+		"id": "2"
+	},
+	{
+		"autor": "Admin",
+		"texto": "Hola user\n",
+		"admin": true,
+		"fyh": "11/12/2025, 22:39:48",
+		"id": "3"
+	}
+]

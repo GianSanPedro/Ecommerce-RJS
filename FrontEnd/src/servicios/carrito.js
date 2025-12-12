@@ -2,9 +2,8 @@ import axios from "axios"
 import { setHeader } from "./token"
 
 const url = process.env.NODE_ENV === 'production'
-            ? '/api/pedidos/'                                                         // en producción
-            : `http://localhost:${process.env.REACT_APP_PORT_SRV_DEV}/api/pedidos/`   // en desarrollo
-
+            ? '/api/pedidos/'                                                         // en produccion
+            : `http://localhost:${process.env.REACT_APP_PORT_SRV_DEV || 8080}/api/pedidos/`   // en desarrollo (fallback 8080)
 
 export async function getPreferenceId(carrito, usuario) {
     const urlBack = window.location.origin + '/#/carrito'
@@ -22,11 +21,11 @@ export async function getPreferenceId(carrito, usuario) {
                 unit_price: +p.precio
             })),
             back_urls: {
-                success: url + 'mp/feedback',
-                failure: url + 'mp/feedback',
-                pending: url + 'mp/feedback'
-            },
-            auto_return: "approved",
+                // usamos la ruta del frontend para evitar bloqueos de MP con localhost:8080
+                success: urlBack,
+                failure: urlBack,
+                pending: urlBack
+            }
         }
     }
 
@@ -35,4 +34,16 @@ export async function getPreferenceId(carrito, usuario) {
 
     const {data:preferenceId} = await axios.post(url + 'mp/create_preference', datos, setHeader())
     return preferenceId
+}
+
+export async function guardarPedido(carrito, usuario, compra) {
+    try {
+        const pedido = { carrito, usuario, compra, fyh: new Date().toLocaleString() }
+        const { data } = await axios.post(url, pedido, setHeader())
+        return data
+    }
+    catch(error) {
+        console.error('Error al guardar pedido:', error.message)
+        return null
+    }
 }
