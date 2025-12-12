@@ -125,5 +125,15 @@ Backend at `http://localhost:<PORT>` (8080 default). Frontend at `http://localho
 - Production: run backend (`npm start`) serving `/api/*` and static from `BackEnd/public`, or serve the build separately pointing Axios to the backend domain.
 
 ## Tests
-- **Backend API**: Jest + Supertest in `BackEnd/tests/api.test.js`. Expects the API running (default `http://localhost:8080`; override with `TEST_BASE_URL`). Run from `BackEnd` with `npm test` (or `npx jest`).
-- **Frontend components**: CRA tests in `FrontEnd/src/__tests__` (e.g., Navbar, Inicio). Run from `FrontEnd` with `npm test -- --watch=false`. Warnings from store logs may appear but tests pass.
+- **Backend API (Jest + Supertest)**  
+  - Location: `BackEnd/tests/api.test.js` (covers login, products CRUD with admin, contact creation/list/delete, orders with token).  
+  - Prereqs: backend running (`npm run dev`), sample users `admin@test.com/admin123` and `cliente1@test.com/cliente123` seeded (MEM/FILE modes ya los traen).  
+  - Base URL: `http://localhost:8080` por defecto; puedes usar otra host/puerto con `TEST_BASE_URL`.  
+  - Run: desde `BackEnd` ejecutar `npm test` (o `npx jest`).  
+  - Qué valida: respuestas 200/401, uso de `access-token` en headers, flujos CRUD básicos y pedido con carrito.
+
+- **Frontend components (CRA)**  
+  - Location: `FrontEnd/src/__tests__` (`Navbar.test.js`, `Inicio.test.js`).  
+  - Prereqs: `npm install` en `FrontEnd`. No necesita backend: las llamadas a productos se mockean.  
+  - Run: desde `FrontEnd` ejecutar `npm test -- --watch=false`.  
+  - Nota: pueden aparecer warnings por logs del reducer o `act`; no afectan el resultado de las pruebas.
