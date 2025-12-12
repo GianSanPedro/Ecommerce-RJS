@@ -1,147 +1,159 @@
-# ECommerce (React + Node)
+# ECommerce React + Node
 
-Aplicacion de comercio electronico con frontend en React y backend en Node/Express. Incluye catalogo con CRUD, carrito con integracion de pagos de Mercado Pago, autenticacion por JWT, chat en tiempo real con Socket.IO, subida de imagenes via FTP y persistencia de mensajes de contacto.
+Aplicación fullstack para comercio electrónico con backend en Node/Express y frontend en React. Incluye gestión de productos, carrito con pagos vía Mercado Pago, chat en tiempo real con Socket.IO, subida de imágenes por FTP y manejo de consultas de contacto.
 
-## Stack tecnologico
+## Stack tecnológico
 
 ### Backend
-- Node.js 16+, Express 4, CORS y JSON.
-- Mongoose + MongoDB (opcional), DAOs alternativos en memoria y archivo.
-- Autenticacion JWT (`access-token` en headers), middleware `guarda` con 401 en errores.
-- Passwords con hash `bcryptjs` (registro/login); si detecta password en texto plano al loguear, lo rehashea y persiste.
-- Multer para subir archivos y `basic-ftp` para enviarlos a un servidor remoto.
-- Mercado Pago SDK (`mercadopago`) para crear preferencias de pago.
-- Socket.IO para chat en tiempo real.
-- Joi para validar productos y dotenv para variables de entorno.
+- Node.js (>=16.20), Express, CORS, Socket.IO.
+- Autenticación con JWT (`access-token`), contraseñas con `bcryptjs`.
+- Validaciones con Joi (productos y contactos) y carga de variables con dotenv.
+- Persistencia seleccionable (`MODO_PERSISTENCIA`): memoria, archivos JSON o MongoDB via Mongoose.
+- Integraciones: Mercado Pago (`mercadopago`) para preferencias de pago; `multer` + `basic-ftp` para subir imágenes a un servidor FTP.
 
 ### Frontend
-- React 18 con `react-scripts`, enrutado con `react-router-dom` (HashRouter).
-- Redux Toolkit para estado global de autenticacion/usuario.
-- Axios para consumir la API REST y `socket.io-client` para WebSocket.
-- `@mercadopago/sdk-react` para el widget de pagos (Wallet).
-- Bootstrap/React-Bootstrap, SASS y componentes propios para UI.
+- React 18 (Create React App) con React Router DOM v6 (HashRouter).
+- Redux Toolkit para estado global de login/usuario; localStorage para token y carrito.
+- UI con Bootstrap / React-Bootstrap y SASS; soporte drag & drop de imágenes.
+- Consumo de API con Axios y WebSocket con `socket.io-client`.
+- Pagos con `@mercadopago/sdk-react` (Wallet).
 
 ## Arquitectura general
-- Proyecto dividido en carpetas `BackEnd` y `FrontEnd`.
-- Comunicacion cliente-API por REST (JSON) y WebSocket para chat.
-- Flujo de datos: Cliente -> React (HashRouter) -> axios/socket.io -> API Express `/api/*` -> Servicios -> DAOs -> MongoDB/archivo/memoria -> respuesta JSON -> UI.
-- Capas backend: rutas -> controladores -> servicios -> DAOs/modelos -> base de datos.
-- Capas frontend: componentes/paginas, servicios (axios/sockets), estado Redux, routing en `App.js`.
+- Separación en `BackEnd` (API + websockets + estáticos) y `FrontEnd` (SPA).
+- Flujo de datos (texto): Cliente → Frontend (React/Redux, HashRouter) → API REST (`/api/...` en Express con middleware `guarda` JWT) → Servicios/DAO (validaciones Joi, MercadoPago, Multer/FTP) → MongoDB/JSON/Memoria → Respuesta JSON/WebSocket → UI.
+- Responsabilidades:
+  - Router/Controlador: traducen HTTP/Socket a llamadas de servicio y responden.
+  - Servicio: lógica de negocio (validaciones, preferencias de pago, guardado de pedidos, subida de archivos, JWT).
+  - DAO/Model: acceso a datos con factories para cambiar memoria/archivo/MongoDB sin tocar la lógica.
+  - Frontend: rutas públicas y protegidas, gestión de carrito, login/registro, panel de alta de productos, chat y vista de contactos.
 
-## Estructura de carpetas
-- `BackEnd/`: API Express, WebSocket y estaticos.
-  - `server.js`: servidor HTTP + Socket.IO y montaje de rutas.
-  - `config.js`: lectura de `.env` (puerto, BD, JWT, FTP, Mercado Pago).
-  - `router/`: endpoints REST (`productos`, `pedidos`, `usuarios`, `upload`, `contacto`) y middleware `guarda`.
-  - `controlador/`: logica de cada recurso y chat.
-  - `servicio/`: validaciones, pagos, FTP, contactos y reglas de negocio.
-  - `model/`: conexion Mongo (`DBMongo.js`) y DAOs de productos, pedidos, usuarios, mensajes y contactos (con modo FILE para productos, mensajes y contactos).
-  - `public/`: se sirve como estatico; puede contener el build del frontend.
-  - `uploads/`: destino temporal de archivos recibidos por multer.
-  - `productos.json`: semilla para modo FILE de productos.
-- `FrontEnd/`: SPA en React.
-  - `src/componentes/`: vistas (Inicio, Alta, Carrito, Contacto, Nosotros, Chat), modales y Navbar.
-  - `src/servicios/`: clientes REST/WebSocket (`productos`, `carrito`, `usuarios`, `upload`, `contacto`).
-  - `src/state/`: Redux store, acciones y reducer de autenticacion.
-  - `src/App.js`, `src/index.js`, `src/index.css`: bootstrap de la app.
-  - `public/`, `build/`: assets y build de produccion.
+## Estructura de carpetas (resumen)
+
+```
+Ecommerce/
+- BackEnd/
+  - server.js (Express + Socket.IO + montaje de rutas)
+  - config.js (.env y variables de conexión)
+  - router/ (productos, pedidos, usuarios, contacto, upload, guarda JWT, websockets de mensajes)
+  - controlador/ (adapta req/res hacia servicios)
+  - servicio/ (negocio: productos, pedidos/MP, usuarios, contactos, mensajes, upload, validaciones)
+  - model/
+    - DBMongo.js (conexión Mongoose)
+    - DAO/ (factories y persistencias MEM/FILE/MONGODB + esquemas mongoose)
+  - public/ (estáticos; puede alojar el build del frontend)
+  - uploads/ (almacenamiento temporal antes de subir a FTP)
+  - *.json (datos cuando se usa modo FILE)
+- FrontEnd/
+  - src/
+    - componentes/ (INICIO, ALTA, CARRITO, CONTACTO, CHAT, NAVBAR, modales, hooks)
+    - servicios/ (axios/socket, token, carrito, productos, usuarios, upload, contacto)
+    - state/ (store Redux Toolkit, reducers y actions)
+    - App.js (rutas y layout) e index.js (HashRouter + Provider)
+  - public/ (assets CRA)
+  - package.json (scripts CRA, build-copy a BackEnd/public)
+- README.md
+```
 
 ## Endpoints del BackEnd
 
-| Metodo | Ruta | Proteccion | Descripcion |
-| --- | --- | --- | --- |
-| GET | `/api/productos/:id?` | JWT | Lista todos los productos o uno por `id`. |
-| POST | `/api/productos` | JWT | Crea producto `{nombre, precio, stock, marca, categoria, detalles, descripcion?, foto, envio}` (valida Joi). |
-| PUT | `/api/productos/:id` | JWT | Actualiza producto. |
-| DELETE | `/api/productos/:id` | JWT | Elimina producto. |
-| GET | `/api/pedidos` | JWT | Obtiene todos los pedidos. |
-| POST | `/api/pedidos` | JWT | Guarda pedido `{usuario, compra, fyh, carrito}`. |
-| POST | `/api/pedidos/mp/create_preference` | JWT | Crea preferencia de pago (Mercado Pago). |
-| GET | `/api/pedidos/mp/feedback` | Publica | Callback MP: si `status=approved` persiste el pedido y redirige a `urlBack`. |
-| POST | `/api/upload` | JWT + multipart | Recibe archivo `archivo`, lo sube por FTP y responde `{urlFotoFTP}`. |
-| POST | `/api/usuarios/login` | Publica | Login `{email, password}` -> `{status, usuario, token}`. |
-| POST | `/api/usuarios/loginVisitante` | Publica | Devuelve token de invitado. |
-| POST | `/api/usuarios/register` | Publica | Alta usuario `{nombre, email, password, admin?}`. |
-| POST | `/api/usuarios/token` | Publica | Valida token `{token}`. |
-| POST | `/api/contacto` | Publica | Guarda mensaje de contacto `{nombre, email, comentario}`. |
-| GET | `/api/contacto` | JWT | Lista mensajes de contacto (pensado para admin). |
-| WebSocket | `/` | Publica | Evento `nuevo-mensaje` guarda y retransmite; `mensajes` envia historial. |
+| Método | Ruta | Descripción | Body/params |
+| ------ | ---- | ----------- | ----------- |
+| GET | `/api/productos/:id?` | Lista productos o uno por id. Protegido con JWT. | `id` opcional en path. |
+| POST | `/api/productos/` | Crea producto (valida Joi). Protegido. | JSON: `nombre, precio, stock, marca, categoria, detalles, descripcion?, foto, envio`. |
+| PUT | `/api/productos/:id` | Actualiza producto. Protegido. | JSON parcial con campos del producto. |
+| DELETE | `/api/productos/:id` | Borra producto. Protegido. | Path `id`. |
+| GET | `/api/pedidos/` | Lista pedidos. Protegido. | - |
+| POST | `/api/pedidos/` | Guarda pedido (carrito + usuario + compra + fecha). Protegido. | JSON `{ carrito, usuario, compra, fyh }`. |
+| POST | `/api/pedidos/mp/create_preference` | Genera `preferenceId` de Mercado Pago a partir del carrito. Protegido. | `{ urlBack, carrito, usuario, prefItems }`. |
+| GET | `/api/pedidos/mp/feedback` | Callback de Mercado Pago: redirige al frontend con `payment_id/status/merchant_order_id`. Público. | Query params. |
+| POST | `/api/upload/` | Sube archivo (campo `archivo`), lo envía a FTP y devuelve URL pública. Protegido. | `multipart/form-data`. |
+| POST | `/api/usuarios/login` | Login: devuelve token y datos de usuario. | `{ email, password }`. |
+| POST | `/api/usuarios/loginVisitante` | Login visitante: token temporal sin credenciales. | - |
+| POST | `/api/usuarios/register` | Registro básico. | `{ nombre, email, password, admin? }`. |
+| POST | `/api/usuarios/token` | Valida token JWT. | `{ token }`. |
+| POST | `/api/contacto/` | Envía solicitud de contacto. Público. | `{ nombre, email, comentario }`. |
+| GET | `/api/contacto/` | Lista contactos recibidos. Protegido. | - |
+| DELETE | `/api/contacto/:id` | Elimina contacto por id. Protegido. | Path `id`. |
+| WebSocket | `/` | Canal de chat con Socket.IO. Eventos: `mensajes` (lista), `nuevo-mensaje` (server rebroacast). | JSON `{ autor, texto, admin, fyh }`. |
 
-Persistencia seleccionable con `MODO_PERSISTENCIA`:
-- MEM (default): arrays en memoria.
-- FILE: solo productos usan `productos.json`.
-- MONGODB: requiere `STRCNX` y `BASE`, usa modelos Mongoose.
-
-## Modos de persistencia y configuración recomendada
-- Default para demo/reclutadores: `MODO_PERSISTENCIA=MEM` (sin requisitos extra).
-- Para probar escritura en disco: `MODO_PERSISTENCIA=FILE` guarda productos en `productos.json` y genera `mensajes.json`/`contactos.json`.
-- Para uso real: `MODO_PERSISTENCIA=MONGODB` con `STRCNX` y `BASE` definidos (configura `.env` sin credenciales en el repo).
-
-Archivos ejemplo:
-- `BackEnd/.env.example`: variables del backend (sin secretos).
-- `FrontEnd/.env.example`: variables del frontend (sin secretos).
+Autenticación: se envía `access-token` en headers (JWT firmado con `LLAVE`). Persistencia: `MODO_PERSISTENCIA` controla si se usa memoria, archivos JSON o MongoDB (esquemas en `model/DAO/models`).
 
 ## FrontEnd
-- Rutas (`HashRouter`): `/inicio`, `/alta` (solo admin), `/carrito`, `/contacto`, `/nosotros`, `/chat` (login requerido).
-- Estado: Redux guarda `login` y `usuarioLogueado`; token en `localStorage`. Carrito en `localStorage` con `useStateLocalStorage`.
-- Consumo de API: axios en servicios (`productos`, `carrito`, `usuarios`, `upload`, `contacto`) usando `REACT_APP_PORT_SRV_DEV` en desarrollo y header `access-token` si hay token.
-- Pagos: Wallet MP crea preferencia; en feedback `/mp/feedback` se guarda pedido en `/api/pedidos` si `status=approved` y se limpia el carrito.
-- Chat: Socket.IO cliente; admins ven todos los mensajes, usuarios ven los propios y los de admins.
-- Subida de imagenes: `ObtenerFoto` envia `FormData` a `/api/upload` y toma la URL devuelta.
-- Contacto: formulario llama a `/api/contacto` y persiste nombre/email/comentario.
+- **Vistas**:
+  - Inicio: listado de productos con búsqueda y agregado al carrito (no para admin).
+  - Alta: panel de administración CRUD de productos; permite subir imagen vía drag&drop (Multer + FTP).
+  - Carrito: edición de cantidades, borrado, preferencia de pago Mercado Pago (Wallet) y guardado de pedido si el pago fue aprobado.
+  - Contacto: formulario público; vista de administración para listar/eliminar consultas.
+  - Chat: sala global en tiempo real (Socket.IO), filtra mensajes por autor/admin.
+  - Nosotros: contenido estático de presentación.
+- **Estado y auth**: Redux Toolkit mantiene `login` y `usuarioLogueado`; tokens en localStorage (helpers en `servicios/token`). El carrito se persiste en localStorage mediante el hook `useStateLocalStorage`.
+- **Navegación**: HashRouter (`/#/...`) para facilitar despliegue detrás de Express estático.
+- **Consumo de API**: servicios en `src/servicios` con Axios; base URL depende de `NODE_ENV` y `REACT_APP_PORT_SRV_DEV`. `setHeader()` agrega `access-token`.
+- **Pagos**: `@mercadopago/sdk-react` inicializa con `REACT_APP_MP_PublicKey`; se llama al endpoint `/api/pedidos/mp/create_preference` antes de abrir el Wallet.
+- **Tiempo real**: `socket.io-client` se conecta al mismo host que la API; suscripción al canal `mensajes`.
 
-## Configuracion y variables de entorno
-- Backend (`BackEnd/.env`):
-  - `PORT`: puerto de Express (8080 por defecto).
-  - `MODO_PERSISTENCIA`: `MEM` | `FILE` | `MONGODB`.
-  - `STRCNX`: cadena de conexion Mongo (ej. `mongodb://127.0.0.1/`).
-  - `BASE`: nombre de la base.
-  - `LLAVE`: secreto JWT.
-  - `MP_AccessToken`: token privado de Mercado Pago.
-  - `FTP_HOST`, `FTP_USER`, `FTP_PASS`, `FTP_DST`: destino FTP para subir imagenes.
-- Frontend (`FrontEnd/.env`):
-  - `REACT_APP_PORT_SRV_DEV`: puerto del backend en desarrollo.
-  - `REACT_APP_MP_PublicKey`: clave publica de MP (usar TEST en dev).
+## Configuración y variables de entorno
 
-## Notas de autenticacion
-- Passwords se almacenan con hash `bcryptjs`. Si habia texto plano, al loguear con la clave correcta se rehashea y persiste.
-- Middleware `guarda` responde 401 si falta o es invalido el token.
+### Backend (`BackEnd/.env`)
+- `PORT`: puerto del servidor (por defecto 8080).
+- `MODO_PERSISTENCIA`: `MEM` | `FILE` | `MONGODB`.
+- `STRCNX`: cadena de conexión Mongo (`mongodb://...`).
+- `BASE`: nombre de la base de datos.
+- `LLAVE`: clave para firmar/validar JWT.
+- `MP_AccessToken`: access token privado de Mercado Pago (servidor).
+- `FTP_HOST`, `FTP_USER`, `FTP_PASS`, `FTP_DST`: credenciales y carpeta destino para subir archivos.
 
-## Usuarios de prueba (modo MEM)
-- Admin: `admin@test.com` / `admin123` (admin: true)
-- Cliente 1: `cliente1@test.com` / `cliente123`
-- Cliente 2: `cliente2@test.com` / `cliente123`
+### Frontend (`FrontEnd/.env` o `.env.development`)
+- `REACT_APP_PORT_SRV_DEV`: puerto donde corre el backend en desarrollo (ej.: 8080).
+- `REACT_APP_MP_PublicKey`: public key de Mercado Pago para el Wallet.
 
-## Instalacion y ejecucion en desarrollo
+## Instalación y ejecución en desarrollo
+
+1) Clonar el repositorio:
 ```bash
-git clone <url-del-repo>
+git clone <url-del-repo> Ecommerce
 cd Ecommerce
-
-# Backend
-cd BackEnd
-npm install
-# configurar .env con las variables anteriores
-npm run dev      # o npm start
-
-# Frontend (en otra terminal)
-cd ../FrontEnd
-npm install
-# configurar REACT_APP_PORT_SRV_DEV=8080 (u otro puerto del backend)
-npm start
 ```
-- Backend expone la API en `http://localhost:<PORT>` (por defecto 8080).
-- Frontend corre en `http://localhost:3000` usando HashRouter.
+
+2) Backend:
+```bash
+cd BackEnd
+cp .env.example .env   # ajusta variables
+npm install
+npm run dev            # nodemon
+# o: npm start          # node server.js
+```
+El backend queda por defecto en `http://localhost:8080`.
+
+3) Frontend (en otra terminal):
+```bash
+cd FrontEnd
+cp .env.example .env   # crea y completa REACT_APP_PORT_SRV_DEV / REACT_APP_MP_PublicKey si no existe
+npm install
+npm start              # CRA en http://localhost:3000
+```
+4) Verifica que `REACT_APP_PORT_SRV_DEV` apunte al puerto del backend y que ambos servidores estén corriendo.
 
 ## Build y despliegue
-- Generar build del frontend: `cd FrontEnd && npm run build`.
-- Copiar build al backend: `npm run build-copy` (copia `FrontEnd/build` a `BackEnd/public`).
-- En produccion: arrancar backend (`npm start`) sirviendo `/api/*` y estaticos desde `BackEnd/public`, o apuntar axios al dominio del backend.
+- Generar build de producción del frontend:
+```bash
+cd FrontEnd
+npm run build
+```
+- Para servir el build con Express, usa:
+```bash
+npm run build-copy   # copia /build a BackEnd/public mediante xcopy (Windows)
+```
+Luego inicia el backend (`npm start`) y servirá los estáticos desde `BackEnd/public` junto con la API.
+- En despliegues separados, puedes servir el build con un CDN/servidor web y apuntar las variables de entorno del frontend al dominio del backend.
 
 ## Tests
-- No se encontraron tests automatizados; scripts `npm test` son placeholders.
+- Backend: no hay tests automatizados; el script `npm test` es un placeholder.
+- Frontend: incluye tooling de CRA (`react-scripts test`) pero no hay suites específicas creadas.
 
-## Futuras mejoras
-- Validar inputs de usuario/registro con Joi y politicas de contrasena.
-- Proteccion de rutas en frontend (guards admin/login) y manejo de expiracion/refresh de tokens.
-- Centralizar manejo de URLs de API y manejo de errores en UI.
-- Persistir carrito en backend/BD para usuarios logueados y auditar pagos.
+## Futuras mejoras / roadmap
+- Endurecer la autorización por rol en backend (p. ej. limitar CRUD de productos y contactos sólo a admin).
+- Completar validaciones Joi para pedidos/usuarios y manejar mejor los códigos de error.
+- Persistir el carrito del lado servidor y manejar webhooks de Mercado Pago para confirmar pagos de forma asíncrona.
+- Mejorar la carga de archivos (validar tipo/tamaño, manejar fallos de FTP) y permitir CDN configurable.
+- Ajustar el script `eject` del frontend (actualmente mal codificado) o removerlo si no se usa.
