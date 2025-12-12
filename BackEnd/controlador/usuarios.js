@@ -11,6 +11,7 @@ class Controlador {
         try {
             const credenciales = req.body
             const usuarioLogueado = await this.servicio.loginUsuario(credenciales)
+            if(usuarioLogueado.status === 'loginError') return res.status(401).json(usuarioLogueado)
             res.json(usuarioLogueado)
         }
         catch(error) {
@@ -33,8 +34,9 @@ class Controlador {
         try {
             const credenciales = req.body
             //console.log(credenciales)
-            if(!Object.keys(credenciales).length) throw new Error('ERROR: No puedo incorporar un pedido vacío')
+            if(!Object.keys(credenciales).length) return res.status(400).json({errMsg: 'Datos vacíos'})
             const usuarioRegistrado = await this.servicio.registerUsuario(credenciales)
+            if(usuarioRegistrado.status === 'registerError') return res.status(400).json(usuarioRegistrado)
             res.json(usuarioRegistrado)
         }
         catch(error) {

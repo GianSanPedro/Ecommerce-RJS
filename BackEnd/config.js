@@ -12,6 +12,7 @@ const FTP_PASS = process.env.FTP_PASS || ''
 const FTP_DST = process.env.FTP_DST || ''
 const MP_AccessToken = process.env.MP_AccessToken || ''
 const LLAVE = process.env.LLAVE || ''
+const CDN_BASE_URL = process.env.CDN_BASE_URL || ''
 
 export default {
     PORT,
@@ -23,5 +24,6 @@ export default {
     FTP_PASS,
     FTP_DST,
     MP_AccessToken,
-    LLAVE
+    LLAVE,
+    CDN_BASE_URL
 }

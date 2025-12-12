@@ -4,14 +4,22 @@ import fs from 'fs'
 
 class Servicio {
     guardarArchivoFTP = async file => {
+        if(!file) throw new Error('No se recibio archivo para subir')
         const urlFotoFTP = await this.subirArchivoFTP(file)
         return urlFotoFTP
     }
 
     subirArchivoFTP = async file => {
-        //console.log(file)
         const client = new Client()
         client.ftp.verbose = false
+        const src = file.path            
+        const dst = `${config.FTP_DST}/${file.filename}`
+
+        // Si no hay credenciales de FTP configuradas, servir desde el filesystem local (/media)
+        if(!config.FTP_HOST || !config.FTP_USER || !config.FTP_PASS) {
+            const base = (config.CDN_BASE_URL || `http://localhost:${config.PORT}/media`).replace(/\/$/,'')
+            return `${base}/${file.filename}`
+        }
 
         try {
             await client.access({
@@ -22,8 +30,6 @@ class Servicio {
             })
             console.log('***** FTP Connection OK! *****')
 
-            const src = file.path            
-            const dst = `${config.FTP_DST}/${file.filename}`            
             console.log('Subiendo archivo por FTP...')
 
             //progreso de la subida de la foto al servidor de archivos por FTP
@@ -43,15 +49,16 @@ class Servicio {
             await fs.promises.unlink(src)
 
             client.close()
-            //return `http://localhost:${config.PORT}/uploads/${file.filename}`
-            //return `https://${config.FTP_USER}.000webhostapp.com/uploads/${file.filename}`
-            return `https://danielsanchez.com.ar/uploads/${config.FTP_DST}/${file.filename}`
+            const base = (config.CDN_BASE_URL || 'https://danielsanchez.com.ar/uploads').replace(/\/$/,'')
+            return `${base}/${config.FTP_DST}/${file.filename}`
         }
         catch (err) {
             console.log('Error de Connection FTP:', err.message)
-
             client.close()
-            return ''
+            try {
+                if(src) await fs.promises.unlink(src)
+            } catch {}
+            throw new Error('No se pudo subir el archivo por FTP')
         }
     }
 }

@@ -17,3 +17,9 @@ export const guarda = (req, res, next) => {
         return res.status(401).json({ error: true, mensaje: 'Token no provista'})
     }
 }
+
+export const soloAdmin = (req, res, next) => {
+    const admin = req.decoded?.usuario?.admin
+    if(admin) return next()
+    return res.status(403).json({ error: true, mensaje: 'Requiere rol admin'})
+}

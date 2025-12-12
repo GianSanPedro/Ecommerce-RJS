@@ -15,7 +15,7 @@ import RouterUpload from './router/upload.js'
 import CnxMongoDB from './model/DBMongo.js'
 
 import cors from 'cors'
-import { guarda } from './router/guarda.js'
+import { guarda, soloAdmin } from './router/guarda.js'
 
 const app = express()
 const http = createServer(app)
@@ -27,6 +27,7 @@ const io = new Server(http, {
 app.use(cors())         
 
 app.use(express.static('public'))
+app.use('/media', express.static('media'))
 
 app.use(express.json())
 
@@ -42,13 +43,13 @@ io.on('connection', new RouterMensajes(io).config())
 // -------------- Rutas / endpoints API RESTFUL ------------------
 
 // rutas protegidas
-app.use('/api/productos', guarda, new RouterProductos().config())
+app.use('/api/productos', guarda, soloAdmin, new RouterProductos().config())
 app.use('/api/pedidos', new RouterPedidos(guarda).config())
-app.use('/api/upload', guarda, new RouterUpload().config())
+app.use('/api/upload', guarda, soloAdmin, new RouterUpload().config())
 
 // Rutas de libre acceso
 app.use('/api/usuarios', new RouterUsuarios().config())
-app.use('/api/contacto', new RouterContactos(guarda).config())
+app.use('/api/contacto', new RouterContactos(guarda, soloAdmin).config())
 
 // Listen del Servidor
 if(config.MODO_PERSISTENCIA == 'MONGODB') {

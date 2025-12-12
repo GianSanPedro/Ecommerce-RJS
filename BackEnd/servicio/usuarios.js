@@ -2,6 +2,7 @@ import ModelFactory from "../model/DAO/usuarios/usuariosFactory.js"
 import config from "../config.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import { validarLogin, validarRegister } from "./validaciones/usuario.js"
 
 class Servicio {
   constructor() {
@@ -9,6 +10,9 @@ class Servicio {
   }
 
   loginUsuario = async (credenciales) => {
+    const { error } = validarLogin(credenciales || {})
+    if(error) return { status: "loginError", mensaje: error.details[0].message }
+
     const email = (credenciales.email || "").toLowerCase().trim();
     const password = credenciales.password || "";
 
@@ -56,13 +60,16 @@ class Servicio {
   };
 
   registerUsuario = async (credenciales) => {
+    const { error } = validarRegister(credenciales || {})
+    if(error) return { status: "registerError", mensaje: error.details[0].message }
+
     const email = (credenciales.email || "").toLowerCase().trim();
     const password = credenciales.password || "";
     const nombre = credenciales.nombre || "";
     const admin = !!credenciales.admin;
 
     if (!email || !password || !nombre)
-      throw new Error("Faltan datos obligatorios para registrar usuario");
+      return { status: "registerError", mensaje: "Faltan datos obligatorios" };
 
     const passwordHash = await bcrypt.hash(password, 10);
     const usuarioRegistrado = await this.model.guardarUsuario({
@@ -71,7 +78,7 @@ class Servicio {
       password: passwordHash,
       admin,
     });
-    return { nombre, email, admin, id: usuarioRegistrado.id || usuarioRegistrado._id };
+    return { status: "registerOk", nombre, email, admin, id: usuarioRegistrado.id || usuarioRegistrado._id };
   };
 
   validarToken = async (datos) => {

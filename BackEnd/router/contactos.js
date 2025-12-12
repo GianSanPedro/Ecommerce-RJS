@@ -2,19 +2,20 @@ import express from 'express'
 import Controlador from '../controlador/contactos.js'
 
 class Router {
-    constructor(guarda) {
+    constructor(guarda, soloAdmin) {
         this.router = express.Router()
         this.controlador = new Controlador()
         this.guarda = guarda
+        this.soloAdmin = soloAdmin
     }
 
     config() {
         // Publico: enviar contacto
         this.router.post('/', this.controlador.guardarContacto )
-        // Protegido: listar contactos
-        this.router.get('/', this.guarda, this.controlador.obtenerContactos )
-        // Protegido: borrar contacto
-        this.router.delete('/:id', this.guarda, this.controlador.borrarContacto )
+        // Protegido admin: listar contactos
+        this.router.get('/', this.guarda, this.soloAdmin, this.controlador.obtenerContactos )
+        // Protegido admin: borrar contacto
+        this.router.delete('/:id', this.guarda, this.soloAdmin, this.controlador.borrarContacto )
         return this.router
     }
 }
